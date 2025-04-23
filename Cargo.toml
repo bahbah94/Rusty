@@ -1,0 +1,33 @@
+[package]
+name = "Rusty"
+version = "0.1.0"
+edition = "2021"
+authors = ["Your Name <your.email@example.com>"]
+description = "A concurrency-first functional programming language"
+
+[dependencies]
+# Parsing & lexing
+logos = "0.15.0"        # Fast lexer generator
+chumsky = "0.9.3"       # Parser combinator library
+# or lalrpop = "0.20.0" # Parser generator
+
+#channel stuff
+flume = "0.11.0" #Blazingly fast Channels
+
+# Runtime concurrency support
+crossbeam = "0.8.2"     # Concurrency primitives
+rayon = "1.8.0"         # Parallel programming library
+tokio = { version = "1.34.0", features = ["full"] } # Async runtime
+
+# Memory management and data structures
+im = "15.1.0"           # Immutable data structures
+
+# CLI support
+clap = { version = "4.4.8", features = ["derive"] } # Command line argument parsing
+
+[dev-dependencies]
+criterion = "0.5.1"     # Benchmarking
+
+[[bench]]
+name = "concurrency_bench"
+harness = false
