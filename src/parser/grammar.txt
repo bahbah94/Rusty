@@ -1,0 +1,74 @@
+// Top-Level Structure
+Program         ::= Statement*
+
+// Types
+Type            ::= "int" | "float" | "string" | "bool"         // Primitive types
+                 | Identifier                                    // Named types
+                 | Identifier "<" TypeList ">"                  // Generic types
+                 | "fn" "(" TypeList? ")" "->" Type             // Function types
+
+TypeList        ::= Type ("," Type)*
+
+// Expressions
+Expr            ::= Literal                                     // Literals
+                 | Identifier                                   // Variables
+                 | Expr BinaryOp Expr                           // Binary operations
+                 | UnaryOp Expr                                 // Unary operations
+                 | Block                                        // Block expressions
+                 | "if" Expr Block ("else" Block)?              // If expressions
+                 | "match" Expr "{" MatchCase* "}"              // Match expressions
+                 | FunctionCall                                 // Function calls
+                 | ConcurrencyExpr                              // Concurrency primitives
+
+Literal         ::= IntLiteral | FloatLiteral | StringLiteral | "true" | "false"
+
+BinaryOp        ::= "+" | "-" | "*" | "/" | "%" 
+                 | "==" | "!=" | "<" | ">" | "<=" | ">=" 
+                 | "&&" | "||" 
+
+UnaryOp         ::= "-" | "!"
+
+Block           ::= "{" Statement* (Expr)? "}"
+
+FunctionCall    ::= Expr "(" (Expr ("," Expr)*)? ")"
+
+MatchCase       ::= Pattern "=>" Expr ("," | ";")
+
+Pattern         ::= "_"                                         // Wildcard
+                 | Literal                                      // Literal pattern
+                 | Identifier                                   // Variable pattern
+                 | Identifier "(" Pattern ")"                   // Constructor pattern
+
+// Statements
+Statement       ::= LetDecl ";"
+                 | FunctionDecl
+                 | TypeDecl ";"
+                 | Expr ";"
+
+LetDecl         ::= "let" ("mut")? Identifier (":" Type)? "=" Expr
+
+FunctionDecl    ::= "fn" Identifier "(" Parameters? ")" ("->" Type)? Block
+
+Parameters      ::= Parameter ("," Parameter)*
+Parameter       ::= Identifier ":" Type
+
+TypeDecl        ::= "type" Identifier ("<" GenericParams ">")? "=" Type
+GenericParams   ::= Identifier ("," Identifier)*
+
+// Concurrency Primitives
+ConcurrencyExpr ::= TaskExpr | ChannelExpr | SendExpr | ReceiveExpr
+                 | ScopeExpr | TransactionExpr | ReactiveExpr
+
+TaskExpr        ::= "task" Block
+
+ChannelExpr     ::= "channel" "<" Type ">" ("(" Expr ")")?
+
+SendExpr        ::= Expr "<!" Expr
+
+ReceiveExpr     ::= Expr "!>"
+
+ScopeExpr       ::= "scope" Block
+
+TransactionExpr ::= "transaction" Block
+
+ReactiveExpr    ::= "reactive" Expr
